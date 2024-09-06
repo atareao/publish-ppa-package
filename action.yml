@@ -13,12 +13,14 @@ inputs:
   gpg_passphrase:
     description: 'Passphrase of the GPG private key'
     required: false
-  tarball:
-    description: 'The tarball of the package to be published'
-    required: true
+  src_dir:
+    description: 'The source directory'
+    required: false
+    default: "src"
   debian_dir:
     description: 'The debian directory, will be merged with the tarball'
     required: false
+    default: "debian"
   series:
     description: 'The series to which the package will be published, separated by space. e.g., "bionic focal"'
     required: false

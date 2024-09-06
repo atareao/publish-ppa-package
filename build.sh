@@ -2,6 +2,9 @@
 
 set -o errexit -o pipefail -o nounset
 
+cat /github/workspace/README.md
+exit 0
+
 REPOSITORY=$INPUT_REPOSITORY
 GPG_PRIVATE_KEY="$INPUT_GPG_PRIVATE_KEY"
 GPG_PASSPHRASE=$INPUT_GPG_PASSPHRASE

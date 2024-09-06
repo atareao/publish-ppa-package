@@ -5,7 +5,7 @@ GitHub action to publish the Ubuntu PPA (Personal Package Archives) packages.
 ## Inputs
 
 ### `repository`
-**Required** The PPA repository, e.g. `yuezk/globalprotect-openconnect`.
+**Required** The PPA repository, e.g. `atareao/atareao`.
 
 ### `gpg_private_key`
 **Required** GPG private key exported as an ASCII armored version or its base64 encoding, exported with the following command.
@@ -17,8 +17,8 @@ gpg --output private.pgp --armor --export-secret-key <KEY_ID or EMAIL>
 ### `gpg_passphrase`
 **Optional** Passphrase of the GPG private key.
 
-### `tarball`
-**Required** The tarball of the package to be published.
+### `src_dir`
+Required The source directory, default to `src`.
 
 ### `deb_email`
 **Required** The email address of the maintainer.
@@ -27,7 +27,7 @@ gpg --output private.pgp --armor --export-secret-key <KEY_ID or EMAIL>
 **Required** The full name of the maintainer.
 
 ### `debian_dir`
-**Optional** The debian directory, will be merged with the tarball.
+**Optional** The debian directory, default to `debian`.
 
 ### `series`
 **Optional** The series to which the package will be published, separated by space. e.g., `"bionic focal"`.
@@ -47,16 +47,12 @@ Default to the series that are supported at the moment, i.e., the output of `dis
 
 ```yaml
 name: Publish PPA
-uses: yuezk/publish-ppa-package@v2
+uses: atareao/publish-ppa-package@v2
 with:
     repository: "yuezk/globalprotect-openconnect"
     gpg_private_key: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
-    gpg_passphrase: ${{ secrets.PPA_GPG_PASSPHRASE }}
-    tarball: publish-ppa/globalprotect-openconnect-*/.build/tarball/*.tar.gz
-    debian_dir: publish-ppa/globalprotect-openconnect-*/.build/debian
     deb_email: "<email>"
     deb_fullname: "<full name>"
-    extra_ppa: "liushuyu-011/rust-bpo-1.75"
 ```
 
 ## Real-world applications
