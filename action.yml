@@ -1,5 +1,5 @@
-name: 'publish-ppa-package'
-description: 'Publish a PPA package'
+name: 'publish-ppa-package-from-source'
+description: 'Publish a PPA package from source'
 branding:
   color: orange
   icon: package
