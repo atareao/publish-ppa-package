@@ -51,13 +51,14 @@ uses: atareao/publish-ppa-package@v2
 with:
     repository: "yuezk/globalprotect-openconnect"
     gpg_private_key: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
+    gpg_passphrase: ${{ secrets.PPA_GPG_PASSPHRASE }}
     deb_email: "<email>"
     deb_fullname: "<full name>"
 ```
 
 ## Real-world applications
 
-- [GlobalProtect-openconnect](https://github.com/yuezk/GlobalProtect-openconnect): A GlobalProtect VPN client for Linux, written in Rust, based on OpenConnect and Tauri, supports SSO with MFA, Yubikey, etc.
+[my-weathers-indicator](https://github.com/atareao/my-weather-indicator)
 
 ## LICENSE
 
