@@ -2,13 +2,11 @@
 
 set -o errexit -o pipefail -o nounset
 
-cat /github/workspace/README.md
-exit 0
+#cat /github/workspace/README.md
 
 REPOSITORY=$INPUT_REPOSITORY
 GPG_PRIVATE_KEY="$INPUT_GPG_PRIVATE_KEY"
 GPG_PASSPHRASE=$INPUT_GPG_PASSPHRASE
-TARBALL=$INPUT_TARBALL
 DEBIAN_DIR=$INPUT_DEBIAN_DIR
 SERIES=$INPUT_SERIES
 REVISION=$INPUT_REVISION
@@ -29,7 +27,6 @@ assert_non_empty() {
 assert_non_empty inputs.repository "$REPOSITORY"
 assert_non_empty inputs.gpg_private_key "$GPG_PRIVATE_KEY"
 assert_non_empty inputs.gpg_passphrase "$GPG_PASSPHRASE"
-assert_non_empty inputs.tarball "$TARBALL"
 assert_non_empty inputs.deb_email "$DEB_EMAIL"
 assert_non_empty inputs.deb_fullname "$DEB_FULLNAME"
 
@@ -74,7 +71,7 @@ if [[ -n "$INPUT_EXTRA_SERIES" ]]; then
 fi
 
 mkdir -p /tmp/workspace/source
-cp $TARBALL /tmp/workspace/source
+cp -r /github/workspace/src /tmp/workspace/source
 if [[ -n $DEBIAN_DIR ]]; then
     cp -r $DEBIAN_DIR /tmp/workspace/debian
 fi
