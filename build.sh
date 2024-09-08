@@ -71,7 +71,10 @@ if [[ -n "$INPUT_EXTRA_SERIES" ]]; then
 fi
 
 mkdir -p /tmp/workspace/source
-cp -r /github/workspace/src/* /tmp/workspace/source
+cp -r /github/workspace/src/* /tmp/workspace/source/
+if [[ -z $DEBIAN_DIR ]]; then
+    DEBIAN_DIR=/github/workspace/debian
+fi
 if [[ -n $DEBIAN_DIR ]]; then
     cp -r $DEBIAN_DIR /tmp/workspace/debian
 fi
@@ -81,10 +84,9 @@ for s in $SERIES; do
 
     echo "::group::Building deb for: $ubuntu_version ($s)"
     
-    cp -r /tmp/workspace /tmp/$s && cd /tmp/$s/source
+    cp -r /tmp/workspace /tmp/$s && cd /tmp/$s
 
     echo "Making non-native package..."
-    debmake
 
     if [[ -n $DEBIAN_DIR ]]; then
         cp -r /tmp/$s/debian/* debian/
@@ -102,7 +104,7 @@ for s in $SERIES; do
     # Install build dependencies
     mk-build-deps --install --remove --tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' debian/control
 
-    debuild -S -sa \
+    debuild --no-tgz-check -S -sa \
         -k"$GPG_KEY_ID" \
         -p"gpg --batch --passphrase "$GPG_PASSPHRASE" --pinentry-mode loopback"
 
