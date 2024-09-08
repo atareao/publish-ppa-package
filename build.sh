@@ -97,5 +97,8 @@ for s in $SERIES; do
 
     echo "Uploaded $package to $REPOSITORY"
 
+    echo "Cleaning up..."
+    rm -rf /tmp/$package_$pkg_version-ppa$REVISION~ubuntu$ubuntu_version*
+
     echo "::endgroup::"
 done
