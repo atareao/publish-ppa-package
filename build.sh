@@ -71,7 +71,7 @@ if [[ -n "$INPUT_EXTRA_SERIES" ]]; then
 fi
 
 mkdir -p /tmp/workspace/source
-cp -r /github/workspace/src /tmp/workspace/source
+cp -r /github/workspace/src/* /tmp/workspace/source
 if [[ -n $DEBIAN_DIR ]]; then
     cp -r $DEBIAN_DIR /tmp/workspace/debian
 fi

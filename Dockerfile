@@ -1,6 +1,6 @@
 FROM ubuntu:noble
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y  gpg \
@@ -10,7 +10,8 @@ RUN apt-get update && \
                         equivs \
                         distro-info-data \
                         distro-info \
-                        software-properties-common
+                        software-properties-common \
+                        bash-completion
 COPY entrypoint.sh build.sh /
 
 CMD ["/entrypoint.sh"]
