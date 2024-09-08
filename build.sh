@@ -7,7 +7,6 @@ set -o errexit -o pipefail -o nounset
 REPOSITORY=$INPUT_REPOSITORY
 GPG_PRIVATE_KEY="$INPUT_GPG_PRIVATE_KEY"
 GPG_PASSPHRASE=$INPUT_GPG_PASSPHRASE
-DEBIAN_DIR=$INPUT_DEBIAN_DIR
 SERIES=$INPUT_SERIES
 REVISION=$INPUT_REVISION
 DEB_EMAIL=$INPUT_DEB_EMAIL
@@ -32,6 +31,10 @@ assert_non_empty inputs.deb_fullname "$DEB_FULLNAME"
 
 export DEBEMAIL="$DEB_EMAIL"
 export DEBFULLNAME="$DEB_FULLNAME"
+
+if [[ -z "$REVISION" ]]; then
+    REVISION=0
+fi
 
 echo "::group::Importing GPG private key..."
 echo "Importing GPG private key..."
@@ -70,27 +73,12 @@ if [[ -n "$INPUT_EXTRA_SERIES" ]]; then
     SERIES="$INPUT_EXTRA_SERIES $SERIES"
 fi
 
-mkdir -p /tmp/workspace/source
-cp -r /github/workspace/src/* /tmp/workspace/source/
-if [[ -z $DEBIAN_DIR ]]; then
-    DEBIAN_DIR=/github/workspace/debian
-fi
-if [[ -n $DEBIAN_DIR ]]; then
-    cp -r $DEBIAN_DIR /tmp/workspace/debian
-fi
-
 for s in $SERIES; do
     ubuntu_version=$(distro-info --series $s -r | cut -d' ' -f1)
 
     echo "::group::Building deb for: $ubuntu_version ($s)"
-    
-    cp -r /tmp/workspace /tmp/$s && cd /tmp/$s
 
-    echo "Making non-native package..."
-
-    if [[ -n $DEBIAN_DIR ]]; then
-        cp -r /tmp/$s/debian/* debian/
-    fi
+    cp -r /github/workspace /tmp/$s && cd /tmp/$s
 
     # Extract the package name from the debian changelog
     package=$(dpkg-parsechangelog --show-field Source)
@@ -100,9 +88,6 @@ for s in $SERIES; do
     # Create the debian changelog
     rm -rf debian/changelog
     dch --create --distribution $s --package $package --newversion $pkg_version-ppa$REVISION~ubuntu$ubuntu_version "$changes"
-
-    # Install build dependencies
-    mk-build-deps --install --remove --tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' debian/control
 
     debuild --no-tgz-check -S -sa \
         -k"$GPG_KEY_ID" \
